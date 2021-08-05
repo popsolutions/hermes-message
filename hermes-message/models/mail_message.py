@@ -50,7 +50,7 @@ class MailMessage(models.Model):
 
         print('x')
         body = {
-            "to": "eDUaErLmS9GR4ncTozKnMF:APA91bG-BAGE0-mYipRCpbXV20WVDhkQpnoGxScrYKR9-_kHXVB9pFle0q9eOpEGJJJhmA-INSTw-Xw_murnXHG6jxl0_UWr6FPDT4k_GTLMH6LO2b5SVAbslHCAERiLoWwi0T6v9gNp",
+            "to": "DUaErLmS9GR4ncTozKnMF:APA91bG-BAGE0-mYipRCpbXV20WVDhkQpnoGxScrYKR9-_kHXVB9pFle0q9eOpEGJJJhmA-INSTw-Xw_murnXHG6jxl0_UWr6FPDT4k_GTLMH6LO2b5SVAbslHCAERiLoWwi0T6v9gNpe",
             "notification": {
                 "title": params[0]['subject'],
                 "body": params[0]['body']
@@ -58,7 +58,7 @@ class MailMessage(models.Model):
         }
 
         header = {
-            "Authorization": "key=AAAAVatm1Mg:APA91bEeST6zN_G8ll5FlHSa75Qc5y6lL76w_ZzDdNXi_iS1HdrDVk83DROKj7AvlVrxE9KObQP6mwSjm2uETjGn8bFmfzOIQ9qGAEYI6pHlpW9WzKG-AsPuf_G6vKuPulgw365FMMSA",
+            "Authorization": "key=AAAVatm1Mg:APA91bEeST6zN_G8ll5FlHSa75Qc5y6lL76w_ZzDdNXi_iS1HdrDVk83DROKj7AvlVrxE9KObQP6mwSjm2uETjGn8bFmfzOIQ9qGAEYI6pHlpW9WzKG-AsPuf_G6vKuPulgw365FMMSAA",
             "Content-Type": "application/json"
         }
 
