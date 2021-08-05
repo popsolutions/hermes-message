@@ -17,9 +17,26 @@ class HermesMonitor(models.Model):
     def _checkNotify(self):
         print('x')
 
-# select msg.res_id, msg.body
-#   from hermes_monitor hrm,
-#        mail_message msg
-#  where msg.res_id = hrm.partner_id
-#    and msg.id > greatest(hrm."idLastMessage", hrm."idLastNotify")
-#  order by hrm.partner_id, msg.id
+        # get messages that were not received or notified by the mobile device
+        query = ("""select msg.res_id, msg.body
+                      from hermes_monitor hrm,
+                           mail_message msg
+                     where msg.res_id = hrm.partner_id
+                       and msg.id > greatest(hrm."idLastMessage", hrm."idLastNotify")
+                     order by hrm.partner_id, msg.id""")
+
+        self.env.cr.execute(query)
+        messagesNotsend = self.env.cr.fetchall()
+
+        for messageNotSend in messagesNotsend:
+            # res_id = messageNotSend[0]
+            # bodyMessage = messageNotSend[1]
+            print(messageNotSend)
+            # self.env['mail.message'].sendModileNotification(self,
+            #     {'res_id': res_id})
+        print('x')
+
+
+
+
+
