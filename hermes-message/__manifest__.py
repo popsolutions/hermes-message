@@ -13,6 +13,8 @@
         'mail'
     ],
     'data': [
+        'security/hermes_notifyservers.xml',
+        'views/hermes_notifyservers.xml',
         'security/hermes_monitor.xml',
         'views/hermes_monitor.xml',
     ],

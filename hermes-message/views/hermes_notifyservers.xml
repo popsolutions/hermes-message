@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2021 Pop Solutions
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+
+<odoo>
+
+    <record model="ir.ui.view" id="hermes_notifyservers_form_view">
+        <field name="name">hermes.notifyservers.form (in hermes-message)</field>
+        <field name="model">hermes.notifyservers</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <!-- TODO -->
+                </header>
+                <sheet>
+                    <!-- TODO -->
+                    <group>
+                        <field name="name"/>
+                    </group>
+                </sheet>
+                <div class="oe_chatter"></div>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="hermes_notifyservers_search_view">
+        <field name="name">hermes.notifyservers.search (in hermes-message)</field>
+        <field name="model">hermes.notifyservers</field>
+        <field name="arch" type="xml">
+            <search>
+                <!-- TODO -->
+            </search>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="hermes_notifyservers_tree_view">
+        <field name="name">hermes.notifyservers.tree (in hermes-message)</field>
+        <field name="model">hermes.notifyservers</field>
+        <field name="arch" type="xml">
+            <tree>
+                <!-- TODO -->
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="hermes_notifyservers_act_window">
+        <field name="name">Hermes Notifyservers</field> <!-- TODO -->
+        <field name="res_model">hermes.notifyservers</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+    </record>
+
+    <record model="ir.ui.menu" id="hermes_notifyservers_menu">
+        <field name="name">Hermes Notifyservers</field>
+        <field name="parent_id" ref="xmlid of parent menu"/> <!-- TODO -->
+        <field name="action" ref="hermes_notifyservers_act_window"/>
+        <field name="sequence" eval="16"/> <!-- TODO -->
+    </record>
+
+</odoo>
