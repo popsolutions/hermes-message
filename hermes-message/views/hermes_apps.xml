@@ -4,9 +4,9 @@
 
 <odoo>
 
-    <record model="ir.ui.view" id="hermes_notifyservers_form_view">
-        <field name="name">hermes.notifyservers.form (in hermes-message)</field>
-        <field name="model">hermes.notifyservers</field>
+    <record model="ir.ui.view" id="hermes_apps_form_view">
+        <field name="name">hermes.apps.form (in hermes-message)</field>
+        <field name="model">hermes.apps</field>
         <field name="arch" type="xml">
             <form>
                 <header>
@@ -32,9 +32,9 @@
         </field>
     </record>
 
-    <record model="ir.ui.view" id="hermes_notifyservers_search_view">
-        <field name="name">hermes.notifyservers.search (in hermes-message)</field>
-        <field name="model">hermes.notifyservers</field>
+    <record model="ir.ui.view" id="hermes_apps_search_view">
+        <field name="name">hermes.apps.search (in hermes-message)</field>
+        <field name="model">hermes.apps</field>
         <field name="arch" type="xml">
             <search>
                 <field name="name"/>
@@ -45,9 +45,9 @@
         </field>
     </record>
 
-    <record model="ir.ui.view" id="hermes_notifyservers_tree_view">
-        <field name="name">hermes.notifyservers.tree (in hermes-message)</field>
-        <field name="model">hermes.notifyservers</field>
+    <record model="ir.ui.view" id="hermes_apps_tree_view">
+        <field name="name">hermes.apps.tree (in hermes-message)</field>
+        <field name="model">hermes.apps</field>
         <field name="arch" type="xml">
             <tree>
                 <field name="name"/>
@@ -57,18 +57,18 @@
         </field>
     </record>
 
-    <record model="ir.actions.act_window" id="hermes_notifyservers_act_window">
-        <field name="name">Hermes Notifyservers</field> <!-- TODO -->
-        <field name="res_model">hermes.notifyservers</field>
+    <record model="ir.actions.act_window" id="hermes_apps_act_window">
+        <field name="name">Apps</field> <!-- TODO -->
+        <field name="res_model">hermes.apps</field>
         <field name="view_mode">tree,form</field>
         <field name="domain">[]</field>
         <field name="context">{}</field>
     </record>
 
-    <record model="ir.ui.menu" id="hermes_notifyservers_menu">
-        <field name="name">Notify Servers</field>
+    <record model="ir.ui.menu" id="hermes_apps_menu">
+        <field name="name">Apps</field>
         <field name="parent_id" ref="hermes-message.hermes_message_menu"/> <!-- TODO -->
-        <field name="action" ref="hermes_notifyservers_act_window"/>
+        <field name="action" ref="hermes_apps_act_window"/>
         <field name="sequence" eval="16"/>
     </record>
 

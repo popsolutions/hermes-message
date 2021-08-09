@@ -4,9 +4,9 @@
 
 <odoo>
 
-    <record model="ir.model.access" id="hermes_notifyservers_access_name"> <!-- TODO acl id -->
-        <field name="name">hermes.notifyservers access name</field> <!-- TODO acl name -->
-        <field name="model_id" ref="model_hermes_notifyservers"/>
+    <record model="ir.model.access" id="hermes_apps_access_name"> <!-- TODO acl id -->
+        <field name="name">hermes.apps access name</field> <!-- TODO acl name -->
+        <field name="model_id" ref="model_hermes_apps"/>
         <!-- TODO review and adapt -->
         <field name="group_id" ref="base.group_user"/>
         <field name="perm_read" eval="1"/>
