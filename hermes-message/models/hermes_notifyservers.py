@@ -10,3 +10,14 @@ class HermesNotifyservers(models.Model):
     _description = 'Hermes Notifyservers'
 
     name = fields.Char()
+    description = fields.Char()
+    key = fields.Char()
+    server_name = fields.Selection(
+        [
+            ('firebase', 'firebase')
+        ]
+    )
+
+    create_date = fields.Date(
+        readonly=True,
+    )
