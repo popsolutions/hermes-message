@@ -7,6 +7,6 @@ from odoo import api, fields, models, _
 class HermesNotifyservers(models.Model):
 
     _name = 'hermes.notifyservers'
-    _description = 'Hermes Notifyservers'  # TODO
+    _description = 'Hermes Notifyservers'
 
     name = fields.Char()

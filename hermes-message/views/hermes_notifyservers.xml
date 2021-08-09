@@ -53,10 +53,10 @@
     </record>
 
     <record model="ir.ui.menu" id="hermes_notifyservers_menu">
-        <field name="name">Hermes Notifyservers</field>
-        <field name="parent_id" ref="xmlid of parent menu"/> <!-- TODO -->
+        <field name="name">Notify Servers</field>
+        <field name="parent_id" ref="hermes-message.hermes_message_menu"/> <!-- TODO -->
         <field name="action" ref="hermes_notifyservers_act_window"/>
-        <field name="sequence" eval="16"/> <!-- TODO -->
+        <field name="sequence" eval="16"/>
     </record>
 
 </odoo>

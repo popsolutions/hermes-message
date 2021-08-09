@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.menu" id="hermes_message_menu">
+            <field name="name">Hermes</field>
+            <field name="sequence" eval="70"/>
+        </record>
+    </data>
+</odoo>
