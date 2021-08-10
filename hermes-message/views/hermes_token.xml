@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2021 Pop Solutions
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+
+<odoo>
+
+    <record model="ir.ui.view" id="hermes_token_form_view">
+        <field name="name">hermes.token.form (in hermes-message)</field>
+        <field name="model">hermes.token</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <!-- TODO -->
+                </header>
+                <sheet>
+                    <h1>
+                        <field name="name"/>
+                    </h1>
+                    <group>
+                        <group>
+                            <field name="partner_id"/>
+                            <field name="app_id"/>
+                            <field name="token"/>
+                            <field name="startsession"/>
+                            <field name="endsession"/>
+                            <field name="lastbeep"/>
+                        </group>
+                        <group>
+                            <field name="create_date"/>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter"></div>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="hermes_token_search_view">
+        <field name="name">hermes.token.search (in hermes-message)</field>
+        <field name="model">hermes.token</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="app_id"/>
+                <field name="token"/>
+                <field name="startsession"/>
+                <field name="endsession"/>
+                <field name="lastbeep"/>
+            </search>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="hermes_token_tree_view">
+        <field name="name">hermes.token.tree (in hermes-message)</field>
+        <field name="model">hermes.token</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="app_id"/>
+                <field name="token"/>
+                <field name="startsession"/>
+                <field name="endsession"/>
+                <field name="lastbeep"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="hermes_token_act_window">
+        <field name="name">Token</field> <!-- TODO -->
+        <field name="res_model">hermes.token</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+    </record>
+
+    <record model="ir.ui.menu" id="hermes_token_menu">
+        <field name="name">Token</field>
+        <field name="parent_id" ref="hermes-message.hermes_message_menu"/>
+        <field name="action" ref="hermes_token_act_window"/>
+        <field name="sequence" eval="20"/>
+    </record>
+
+</odoo>

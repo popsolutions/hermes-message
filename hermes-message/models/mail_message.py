@@ -52,20 +52,55 @@ class MailMessage(models.Model):
 
     def sendModileNotification(self, params):
 
-        print('x')
-        body = {
-            "to": "DUaErLmS9GR4ncTozKnMF:APA91bG-BAGE0-mYipRCpbXV20WVDhkQpnoGxScrYKR9-_kHXVB9pFle0q9eOpEGJJJhmA-INSTw-Xw_murnXHG6jxl0_UWr6FPDT4k_GTLMH6LO2b5SVAbslHCAERiLoWwi0T6v9gNpe",
-            "notification": {
-                "title": params[0]['subject'],
-                "body": params[0]['body']
+        channelIds = '';
+        aux = ''
+
+        for s in params['channel_ids']:
+            channelIds = aux + s
+            aux = ','
+
+        queryChannel = '''
+            select tok.token,
+                   app.server_key
+              from (select partner_id
+                  from (
+                    select channel_id, 
+                           partner_id, 
+                           ROW_NUMBER() over(partition by channel_id order by channel_id desc) sequential_bychannelid,
+                           ROW_NUMBER() over(order by channel_id desc) sequential
+                      from (select channel_id, 
+                                   partner_id, 
+                                   lag(channel_id) over(order by channel_id) 
+                              from mail_channel_partner mcp 
+                             where partner_id  in (%(channelIds)s)
+                           ) t 
+                       ) t
+                 where sequential_bychannelid = sequential
+                   and partner_id <> %(self.env.user.id)s
+                 ) partners,
+                 hermes_token tok,
+                 hermes_apps app
+             where tok.partner_id = partners.partner_id
+               and app.id = tok.app_id
+        '''
+        tokens = self.env.cr.execute(queryChannel).fetchall()
+
+        for token in tokens:
+            print('x')
+            body = {
+                "to": token['token'],
+                "notification": {
+                    "title": params[0]['subject'],
+                    "body": params[0]['body']
+                }
             }
-        }
 
-        header = {
-            "Authorization": "key=AAAVatm1Mg:APA91bEeST6zN_G8ll5FlHSa75Qc5y6lL76w_ZzDdNXi_iS1HdrDVk83DROKj7AvlVrxE9KObQP6mwSjm2uETjGn8bFmfzOIQ9qGAEYI6pHlpW9WzKG-AsPuf_G6vKuPulgw365FMMSAA",
-            "Content-Type": "application/json"
-        }
+            header = {
+                "Authorization": "key=" + token['server_key'],
+                "Content-Type": "application/json"
+            }
 
-        r = requests.post("https://fcm.googleapis.com/fcm/send", data=json.dumps(body), headers=header)
-        print('x')
+            r = requests.post("https://fcm.googleapis.com/fcm/send", data=json.dumps(body), headers=header) # Passar para o modo odoo
+            print('x')
+
         return
