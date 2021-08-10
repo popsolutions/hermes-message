@@ -13,8 +13,10 @@
         'mail'
     ],
     'data': [
-        'security/hermes_apps.xml',
         'views/hermes_menu.xml',
+        'security/hermes_token.xml',
+        'views/hermes_token.xml',
+        'security/hermes_apps.xml',
         'views/hermes_apps.xml',
         'security/hermes_monitor.xml',
         'views/hermes_monitor.xml',

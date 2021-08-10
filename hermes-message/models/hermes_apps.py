@@ -4,14 +4,15 @@
 from odoo import api, fields, models, _
 
 
-class HermesNotifyservers(models.Model):
+class HermesApps(models.Model):
 
-    _name = 'hermes.notifyservers'
-    _description = 'Hermes Notifyservers'
+    _name = 'hermes.apps'
+    _description = 'Hermes Apps'
 
     name = fields.Char()
+    app_id = fields.Char('App Id')
+    server_key = fields.Char()
     description = fields.Char()
-    key = fields.Char()
     server_name = fields.Selection(
         [
             ('firebase', 'firebase')
