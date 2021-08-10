@@ -55,8 +55,8 @@ class MailMessage(models.Model):
         channelIds = '';
         aux = ''
 
-        for s in params['channel_ids']:
-            channelIds = aux + s
+        for s in params[0]['channel_ids'][0]:
+            channelIds = channelIds + aux + str(s)
             aux = ','
 
         queryChannel = '''
@@ -72,23 +72,25 @@ class MailMessage(models.Model):
                                    partner_id, 
                                    lag(channel_id) over(order by channel_id) 
                               from mail_channel_partner mcp 
-                             where partner_id  in (%(channelIds)s)
+                             where partner_id  in (''' + channelIds + ''')
                            ) t 
                        ) t
                  where sequential_bychannelid = sequential
-                   and partner_id <> %(self.env.user.id)s
+                   and partner_id <> ''' + str(self.env.user.id) + '''
                  ) partners,
                  hermes_token tok,
                  hermes_apps app
              where tok.partner_id = partners.partner_id
                and app.id = tok.app_id
         '''
-        tokens = self.env.cr.execute(queryChannel).fetchall()
+
+        self.env.cr.execute(queryChannel)
+        tokens = self.env.cr.fetchall()
 
         for token in tokens:
             print('x')
             body = {
-                "to": token['token'],
+                "to": token[0],
                 "notification": {
                     "title": params[0]['subject'],
                     "body": params[0]['body']
@@ -96,7 +98,7 @@ class MailMessage(models.Model):
             }
 
             header = {
-                "Authorization": "key=" + token['server_key'],
+                "Authorization": "key=" + token[1],
                 "Content-Type": "application/json"
             }
 
