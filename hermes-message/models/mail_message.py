@@ -46,6 +46,10 @@ class MailMessage(models.Model):
                     'idLastMessage' : idLastMessage}
                 );
 
+        return super(MailMessage, self)._search(
+            args, offset=offset, limit=limit, order=order,
+            count=count, access_rights_uid=access_rights_uid)
+
     def sendModileNotification(self, params):
 
         print('x')
@@ -65,4 +69,3 @@ class MailMessage(models.Model):
         r = requests.post("https://fcm.googleapis.com/fcm/send", data=json.dumps(body), headers=header)
         print('x')
         return
-
