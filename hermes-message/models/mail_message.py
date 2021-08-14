@@ -14,11 +14,13 @@ class MailMessage(models.Model):
     @api.model_create_multi
     @api.returns('self', lambda value: value.id)
     def create(self, values):
+        # values = {'author_id': 78, 'model': 'mail.channel', 'res_id': 78, 'message_type': 'mobilenotification', 'subject': 'Teste-postman', 'body': 'Mateus-Quinta', 'channel_ids': [[3, 78]]}
+
         res = super(MailMessage, self).create(values)
         print(values[0])
 
         if values[0]['message_type'] == 'mobilenotification':
-            self.sendModileNotification(values)
+            self.sendModileNotification(values, res.id)
 
         return res
 
@@ -34,23 +36,19 @@ class MailMessage(models.Model):
             if (arg[0] == 'res_id'):
                 partner_id = arg[2];
 
-        if idLastMessage > 0:
-            hermes_monitor = self.env['hermes.monitor'].search(
-                [['partner_id', '=', partner_id]]);
-
-            if hermes_monitor:
-                hermes_monitor.write({'idLastMessage' : idLastMessage});
-            else:
-                hermes_monitor.create(
-                    {'partner_id' : partner_id,
-                    'idLastMessage' : idLastMessage}
-                );
-
-        return super(MailMessage, self)._search(
+        res = super(MailMessage, self)._search(
             args, offset=offset, limit=limit, order=order,
             count=count, access_rights_uid=access_rights_uid)
 
-    def sendModileNotification(self, params):
+        if idLastMessage > 0:
+            self.env['hermes.monitor'].create(
+                    {'partner_id' : partner_id,
+                    'idlastmessage' : idLastMessage}
+                );
+
+        return res
+
+    def sendModileNotification(self, params, idlastnotify):
 
         channelIds = '';
         aux = ''
@@ -61,9 +59,10 @@ class MailMessage(models.Model):
 
         queryChannel = '''
             select tok.token,
-                   app.server_key
+                   app.server_key,
+                   partners.partner_id
               from (select partner_id
-                  from (
+                      from (
                     select channel_id, 
                            partner_id, 
                            ROW_NUMBER() over(partition by channel_id order by channel_id desc) sequential_bychannelid,
@@ -88,7 +87,6 @@ class MailMessage(models.Model):
         tokens = self.env.cr.fetchall()
 
         for token in tokens:
-            print('x')
             body = {
                 "to": token[0],
                 "notification": {
@@ -103,6 +101,10 @@ class MailMessage(models.Model):
             }
 
             r = requests.post("https://fcm.googleapis.com/fcm/send", data=json.dumps(body), headers=header) # Passar para o modo odoo
-            print('x')
+
+            self.env['hermes.monitor'].create(
+                    {'partner_id' : token[2],
+                    'idlastnotify' : idlastnotify}
+                );
 
         return
