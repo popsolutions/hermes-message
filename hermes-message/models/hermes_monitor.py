@@ -10,14 +10,15 @@ class HermesMonitor(models.Model):
     _description = 'Hermes Monitor'
 
     partner_id = fields.Many2one('res.partner', 'Vendor')
-    idlastmessage = fields.Many2one('mail.message')
-    idlastnotify = fields.Many2one('mail.message')
+    channel_id = fields.Many2one('mail.channel', 'Channel')
+    idlastmessage = fields.Integer()
+    idlastnotify = fields.Integer()
 
     @api.model_create_multi
     @api.returns('self', lambda value: value.id)
     def create(self, values):
         value = values[0]
-        hermes_monitor = self.env['hermes.monitor'].search([['partner_id', '=', value['partner_id']]]);
+        hermes_monitor = self.env['hermes.monitor'].search([('partner_id', '=', value['partner_id']), ('channel_id', '=', value['channel_id'])]);
 
         if hermes_monitor:
             lastMessage = {}
@@ -40,15 +41,13 @@ class HermesMonitor(models.Model):
 
     @api.model
     def _checkNotify(self):
-        print('x')
-
         # get messages that were not received or notified by the mobile device
         query = """select msg.id, msg.res_id, msg.body
                      from hermes_monitor hrm,
                           mail_message msg
                     where msg.res_id = hrm.partner_id
                       and msg.id > greatest(hrm.idlastmessage, hrm.idlastnotify)
-                    order by hrm.partner_id, msg.id limit 2 /*//t.todo*/
+                    order by hrm.partner_id, msg.id
         """
 
         self.env.cr.execute(query)
@@ -86,9 +85,6 @@ class HermesMonitor(models.Model):
             }
 
             self.env['mail.message'].create(mail_message)
-
-            print(mail_message)
-        print('x')
         return
 
 

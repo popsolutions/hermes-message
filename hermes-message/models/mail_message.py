@@ -20,7 +20,7 @@ class MailMessage(models.Model):
         print(values[0])
 
         if values[0]['message_type'] == 'mobilenotification':
-            self.sendModileNotification(values, res.id)
+            self.sendModileNotification(values, values[0]['parent_id'])
 
         return res
 
@@ -30,11 +30,11 @@ class MailMessage(models.Model):
         idLastMessage = 0
 
         for arg in args:
-            if ((arg[0] == 'id') and (arg[1] == '>')):
+            if ((arg[0] == 'id') and (arg[1] == '>')): #  sample: ["id", ">","400"]
                 idLastMessage = int(arg[2]);
 
             if (arg[0] == 'res_id'):
-                partner_id = arg[2];
+                channel_id = arg[2];
 
         res = super(MailMessage, self)._search(
             args, offset=offset, limit=limit, order=order,
@@ -42,8 +42,9 @@ class MailMessage(models.Model):
 
         if idLastMessage > 0:
             self.env['hermes.monitor'].create(
-                    {'partner_id' : partner_id,
-                    'idlastmessage' : idLastMessage}
+                    {'partner_id': self.env.user.partner_id.id,
+                     'idlastmessage': idLastMessage,
+                     'channel_id': channel_id}
                 );
 
         return res
@@ -104,7 +105,9 @@ class MailMessage(models.Model):
 
             self.env['hermes.monitor'].create(
                     {'partner_id' : token[2],
-                    'idlastnotify' : idlastnotify}
+                    'idlastnotify' : idlastnotify,
+                    'channel_id' : params[0]['res_id']
+                     }
                 );
 
         return

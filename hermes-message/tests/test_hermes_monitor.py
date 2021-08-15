@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-# from odoo.tests import pytest
-# from odoo.addons.hr.tests.common import TestHrCommon
 import pytest
+import responses
+import odoo.tests.common as common
 
-class TestX(TestHrCommon):
+class Teste_hermes_monitor(common.TransactionCase):
+    @responses.activate
     def test_x(self):
-        print('hello odoo')
-        print('hello odoo')
+        print('x')
+        self.env['hermes.monitor'].checkNotify(self)
+        print('y')
+
