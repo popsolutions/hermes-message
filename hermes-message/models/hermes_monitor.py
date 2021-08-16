@@ -23,13 +23,12 @@ class HermesMonitor(models.Model):
         if hermes_monitor:
             lastMessage = {}
 
-            # todo - improve search because you are getting children unnecessarily
             if 'idlastmessage' in value:
-                if value['idlastmessage'] > hermes_monitor.idlastmessage.id:
+                if value['idlastmessage'] > hermes_monitor.idlastmessage:
                     lastMessage.update({'idlastmessage': value['idlastmessage']})
 
             if 'idlastnotify' in value:
-                if value['idlastnotify'] > hermes_monitor.idlastnotify.id:
+                if value['idlastnotify'] > hermes_monitor.idlastnotify:
                     lastMessage.update({'idlastnotify': value['idlastnotify']})
 
             if (lastMessage != {}):
@@ -45,8 +44,9 @@ class HermesMonitor(models.Model):
         query = """select msg.id, msg.res_id, msg.body
                      from hermes_monitor hrm,
                           mail_message msg
-                    where msg.res_id = hrm.partner_id
+                    where msg.res_id = hrm.channel_id
                       and msg.id > greatest(hrm.idlastmessage, hrm.idlastnotify)
+                      and msg.message_type <> 'mobilenotification'
                     order by hrm.partner_id, msg.id
         """
 
@@ -86,7 +86,6 @@ class HermesMonitor(models.Model):
 
             self.env['mail.message'].create(mail_message)
         return
-
 
 
 
