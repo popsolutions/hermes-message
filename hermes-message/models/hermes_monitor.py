@@ -41,14 +41,19 @@ class HermesMonitor(models.Model):
     @api.model
     def _checkNotify(self):
         # get messages that were not received or notified by the mobile device
-        query = """select msg.id, msg.res_id, msg.body, msg.author_id
-                     from hermes_monitor hrm,
-                          mail_message msg
-                    where msg.res_id = hrm.channel_id
-                      and msg.author_id  <> hrm.partner_id 
-                      and msg.id > greatest(hrm.idlastmessage, hrm.idlastnotify)
-                      and msg.message_type <> 'mobilenotification'
-                    order by hrm.partner_id, msg.id
+        query = """
+            select mm.id, mm.res_id, mm.body, mm.author_id
+              from hermes_token ht,
+                   mail_channel_partner mcp left join hermes_monitor hm 
+                                                   on (hm.partner_id = mcp.partner_id and hm.channel_id = mcp.channel_id),
+                   mail_message mm 
+             where mcp.partner_id = ht.partner_id
+               and mm.id > ht.idlastmessage /*consider from the moment the token loaded*/
+               and mm.res_id = mcp.channel_id
+               and mm.author_id <> mcp.partner_id /*disregard the author of the message*/
+               and mm.id > greatest(coalesce(hm.idlastmessage, hm.idlastnotify, 0))
+               and mm.message_type <> 'mobilenotification'
+            order by hm.partner_id, mm.id
         """
 
         self.env.cr.execute(query)
@@ -87,6 +92,5 @@ class HermesMonitor(models.Model):
 
             self.env['mail.message'].create(mail_message)
         return
-
 
 

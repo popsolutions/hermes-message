@@ -24,6 +24,7 @@
                             <field name="startsession"/>
                             <field name="endsession"/>
                             <field name="lastbeep"/>
+                            <field name="idlastmessage"/>
                         </group>
                         <group>
                             <field name="create_date"/>
@@ -47,6 +48,7 @@
                 <field name="startsession"/>
                 <field name="endsession"/>
                 <field name="lastbeep"/>
+                <field name="idlastmessage"/>
             </search>
         </field>
     </record>
@@ -63,6 +65,7 @@
                 <field name="startsession"/>
                 <field name="endsession"/>
                 <field name="lastbeep"/>
+                <field name="idlastmessage"/>
             </tree>
         </field>
     </record>

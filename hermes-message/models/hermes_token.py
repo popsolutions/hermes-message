@@ -18,6 +18,7 @@ class HermesToken(models.Model):
     startsession = fields.Datetime()
     endsession = fields.Datetime()
     lastbeep = fields.Datetime()
+    idlastmessage = fields.Integer()
 
     @api.model
     def create(self, vals):
@@ -35,6 +36,10 @@ class HermesToken(models.Model):
         vals['startsession'] = datetime.now();
         vals['startsession'] = datetime.now();
         vals['endsession'] = None;
+
+        self.env.cr.execute('select id from mail_message order by id desc limit 1')
+        idlastmessage = self.env.cr.fetchall()
+        vals['idlastmessage'] = idlastmessage[0][0];
 
         if tokens:
             for token in tokens:
