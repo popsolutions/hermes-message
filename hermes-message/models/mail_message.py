@@ -30,7 +30,7 @@ class MailMessage(models.Model):
         idLastMessage = 0
 
         for arg in args:
-            if ((arg[0] == 'id') and (arg[1] == '>')): #  sample: ["id", ">","400"]
+            if ((arg[0] == 'id') and (arg[1] == '>') and (str(arg[2]).isdigit())): #  sample: ["id", ">","400"]
                 idLastMessage = int(arg[2]);
 
             if (arg[0] == 'res_id'):
@@ -55,29 +55,19 @@ class MailMessage(models.Model):
         channelIds = '';
         aux = ''
 
-        for s in param['channel_ids'][0]:
+        for s in param['channel_ids']:
             channelIds = channelIds + aux + str(s)
             aux = ','
 
         queryChannel = '''
+        /***Getting token and server key from contacts involved in the messagem channel***/
             select tok.token,
                    app.server_key,
                    partners.partner_id
-              from (select partner_id
-                      from (
-                    select channel_id, 
-                           partner_id, 
-                           ROW_NUMBER() over(partition by channel_id order by channel_id desc) sequential_bychannelid,
-                           ROW_NUMBER() over(order by channel_id desc) sequential
-                      from (select channel_id, 
-                                   partner_id, 
-                                   lag(channel_id) over(order by channel_id) 
-                              from mail_channel_partner mcp 
-                             where partner_id  in (''' + channelIds + ''')
-                           ) t 
-                       ) t
-                 where sequential_bychannelid = sequential
-                   and partner_id <> ''' + str(param['author_id']) + '''
+              from ( select mcp.partner_id 
+                   from mail_channel_partner mcp 
+                  where channel_id in (''' + channelIds + ''') 
+                    and partner_id <> ''' + str(param['author_id']) + '''
                  ) partners,
                  hermes_token tok,
                  hermes_apps app
@@ -93,7 +83,12 @@ class MailMessage(models.Model):
                 "to": token[0],
                 "notification": {
                     "title": param['subject'],
-                    "body": param['body']
+                    "body": param['body'],
+
+                },
+                "data":{
+                    "channel_id": channelIds,
+                    "mail_message_id": param['parent_id']
                 }
             }
 

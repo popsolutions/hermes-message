@@ -45,6 +45,7 @@ class HermesMonitor(models.Model):
                      from hermes_monitor hrm,
                           mail_message msg
                     where msg.res_id = hrm.channel_id
+                      and msg.author_id  <> hrm.partner_id 
                       and msg.id > greatest(hrm.idlastmessage, hrm.idlastnotify)
                       and msg.message_type <> 'mobilenotification'
                     order by hrm.partner_id, msg.id
@@ -86,7 +87,6 @@ class HermesMonitor(models.Model):
 
             self.env['mail.message'].create(mail_message)
         return
-
 
 
 
