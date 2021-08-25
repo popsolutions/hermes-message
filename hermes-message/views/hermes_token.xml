@@ -61,7 +61,6 @@
                 <field name="name"/>
                 <field name="partner_id"/>
                 <field name="app_id"/>
-                <field name="token"/>
                 <field name="startsession"/>
                 <field name="endsession"/>
                 <field name="lastbeep"/>
