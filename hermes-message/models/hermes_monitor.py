@@ -41,7 +41,7 @@ class HermesMonitor(models.Model):
     @api.model
     def _checkNotify(self):
         # get messages that were not received or notified by the mobile device
-        query = """select msg.id, msg.res_id, msg.body
+        query = """select msg.id, msg.res_id, msg.body, msg.author_id
                      from hermes_monitor hrm,
                           mail_message msg
                     where msg.res_id = hrm.channel_id
@@ -69,18 +69,18 @@ class HermesMonitor(models.Model):
             usersMessageChannel = self.env.cr.fetchall()
 
             for userMessageChannel in usersMessageChannel:
-                attachment_ids.append(userMessageChannel[0])
+                attachment_ids.append(userMessageChannel[0]) #//t. provavemente não é mais necessário
 
             mail_message = {
                 "parent_id": messageNotSend[0],
-                "author_id": messageNotSend[1],
+                "author_id": messageNotSend[3],
                 "model": "mail.channel",
                 "res_id": messageNotSend[1],
                 "message_type": "mobilenotification",
                 "subject": "Mensagem",
                 "body": messageNotSend[2].replace('<p>', '').replace('</p>', ''),
                 "channel_ids": [
-                    attachment_ids
+                    messageNotSend[1]
                 ]
             }
 

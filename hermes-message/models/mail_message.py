@@ -51,10 +51,11 @@ class MailMessage(models.Model):
 
     def sendModileNotification(self, params, idlastnotify):
 
+        param = params[0];
         channelIds = '';
         aux = ''
 
-        for s in params[0]['channel_ids'][0]:
+        for s in param['channel_ids'][0]:
             channelIds = channelIds + aux + str(s)
             aux = ','
 
@@ -76,7 +77,7 @@ class MailMessage(models.Model):
                            ) t 
                        ) t
                  where sequential_bychannelid = sequential
-                   and partner_id <> ''' + str(self.env.user.id) + '''
+                   and partner_id <> ''' + str(param['author_id']) + '''
                  ) partners,
                  hermes_token tok,
                  hermes_apps app
@@ -91,8 +92,8 @@ class MailMessage(models.Model):
             body = {
                 "to": token[0],
                 "notification": {
-                    "title": params[0]['subject'],
-                    "body": params[0]['body']
+                    "title": param['subject'],
+                    "body": param['body']
                 }
             }
 
@@ -106,7 +107,7 @@ class MailMessage(models.Model):
             self.env['hermes.monitor'].create(
                     {'partner_id' : token[2],
                     'idlastnotify' : idlastnotify,
-                    'channel_id' : params[0]['res_id']
+                    'channel_id' : param['res_id']
                      }
                 );
 
