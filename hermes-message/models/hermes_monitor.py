@@ -52,7 +52,7 @@ class HermesMonitor(models.Model):
                and mm.res_id = mcp.channel_id
                and mm.author_id <> mcp.partner_id /*disregard the author of the message*/
                and mm.id > greatest(coalesce(hm.idlastmessage, 0), coalesce(hm.idlastnotify, 0))
-               and mm.message_type <> 'mobilenotification'
+               and mm.message_type = 'comment'
             order by hm.partner_id, mm.id
         """
 
@@ -92,4 +92,3 @@ class HermesMonitor(models.Model):
 
             self.env['mail.message'].create(mail_message)
         return
-
