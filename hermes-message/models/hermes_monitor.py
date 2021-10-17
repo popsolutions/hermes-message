@@ -18,7 +18,7 @@ class HermesMonitor(models.Model):
     @api.returns('self', lambda value: value.id)
     def create(self, values):
         value = values[0]
-        hermes_monitor = self.env['hermes.monitor'].search([('partner_id', '=', value['partner_id']), ('channel_id', '=', value['channel_id'])]);
+        hermes_monitor = self.env['hermes.monitor'].search([('partner_id', '=', value['partner_id']), ('channel_id', '=', int(value['channel_id']))]);
 
         if hermes_monitor:
             lastMessage = {}

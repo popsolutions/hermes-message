@@ -25,14 +25,10 @@ class MailMessage(models.Model):
         return res
 
     def sendModileNotification(self, params, idlastnotify):
+        # params example = {'author_id': 1, 'res_id': 78, 'subject': 'Título Mensagem', 'body': 'Mensagem']}
 
         param = params[0]
-        channelIds = ''
-        aux = ''
-
-        for s in param['channel_ids']:
-            channelIds = channelIds + aux + str(s)
-            aux = ','
+        channelId = str(param['res_id'])
 
         queryChannel = '''
         /***Getting token and server key from contacts involved in the messagem channel***/
@@ -41,7 +37,7 @@ class MailMessage(models.Model):
                    partners.partner_id
               from ( select mcp.partner_id 
                    from mail_channel_partner mcp 
-                  where channel_id in (''' + channelIds + ''') 
+                  where channel_id = ''' + channelId + ''' 
                     and partner_id <> ''' + str(param['author_id']) + '''
                  ) partners,
                  hermes_token tok,
@@ -62,7 +58,7 @@ class MailMessage(models.Model):
 
                 },
                 "data":{
-                    "channel_id": channelIds,
+                    "channel_id": channelId,
                     "mail_message_id": param['parent_id']
                 }
             }
@@ -75,9 +71,9 @@ class MailMessage(models.Model):
             r = requests.post("https://fcm.googleapis.com/fcm/send", data=json.dumps(body), headers=header) # Passar para o modo odoo
 
             self.env['hermes.monitor'].create(
-                    {'partner_id' : token[2],
-                    'idlastnotify' : idlastnotify,
-                    'channel_id' : param['res_id']
+                    {'partner_id': token[2],
+                    'idlastnotify': idlastnotify,
+                    'channel_id' : channelId
                      }
                 )
 
