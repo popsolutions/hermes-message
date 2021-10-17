@@ -27,54 +27,59 @@ class MailMessage(models.Model):
     def sendModileNotification(self, params, idlastnotify):
         # params example = {'author_id': 1, 'res_id': 78, 'subject': 'Título Mensagem', 'body': 'Mensagem']}
 
-        param = params[0]
-        channelId = str(param['res_id'])
+        for param in params:
+            channelId = str(param['res_id'])
+            parent_id = 0
 
-        queryChannel = '''
-        /***Getting token and server key from contacts involved in the messagem channel***/
-            select tok.token,
-                   app.server_key,
-                   partners.partner_id
-              from ( select mcp.partner_id 
-                   from mail_channel_partner mcp 
-                  where channel_id = ''' + channelId + ''' 
-                    and partner_id <> ''' + str(param['author_id']) + '''
-                 ) partners,
-                 hermes_token tok,
-                 hermes_apps app
-             where tok.partner_id = partners.partner_id
-               and app.id = tok.app_id
-        '''
+            if 'parent_id' in param:
+                parent_id = param['parent_id']
 
-        self.env.cr.execute(queryChannel)
-        tokens = self.env.cr.fetchall()
+            queryChannel = '''
+            /***Getting token and server key from contacts involved in the messagem channel***/
+                select tok.token,
+                       app.server_key,
+                       partners.partner_id
+                  from ( select mcp.partner_id 
+                       from mail_channel_partner mcp 
+                      where channel_id = ''' + channelId + ''' 
+                        and partner_id <> ''' + str(param['author_id']) + '''
+                     ) partners,
+                     hermes_token tok,
+                     hermes_apps app
+                 where tok.partner_id = partners.partner_id
+                   and app.id = tok.app_id
+            '''
 
-        for token in tokens:
-            body = {
-                "to": token[0],
-                "notification": {
-                    "title": param['subject'],
-                    "body": param['body'],
+            self.env.cr.execute(queryChannel)
+            tokens = self.env.cr.fetchall()
 
-                },
-                "data":{
-                    "channel_id": channelId,
-                    "mail_message_id": param['parent_id']
+            for token in tokens:
+                body = {
+                    "to": token[0],
+                    "notification": {
+                        "title": param['subject'],
+                        "body": param['body'],
+
+                    },
+                    "data":{
+                        "channel_id": channelId,
+                        "mail_message_id": parent_id
+                    }
                 }
-            }
 
-            header = {
-                "Authorization": "key=" + token[1],
-                "Content-Type": "application/json"
-            }
+                header = {
+                    "Authorization": "key=" + token[1],
+                    "Content-Type": "application/json"
+                }
 
-            r = requests.post("https://fcm.googleapis.com/fcm/send", data=json.dumps(body), headers=header) # Passar para o modo odoo
+                r = requests.post("https://fcm.googleapis.com/fcm/send", data=json.dumps(body), headers=header) # Passar para o modo odoo
 
-            self.env['hermes.monitor'].create(
-                    {'partner_id': token[2],
-                    'idlastnotify': idlastnotify,
-                    'channel_id' : channelId
-                     }
-                )
+                if idlastnotify != 0:
+                    self.env['hermes.monitor'].create(
+                            {'partner_id': token[2],
+                            'idlastnotify': idlastnotify,
+                            'channel_id' : channelId
+                             }
+                        )
 
         return
