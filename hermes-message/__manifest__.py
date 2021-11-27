@@ -13,7 +13,7 @@
         'mail'
     ],
     'data': [
-	'views/hermes_message_base.xml',
+	'views/hermes_base_views.xml',
         'views/hermes_menu.xml',
         'security/hermes_token.xml',
         'views/hermes_token.xml',
