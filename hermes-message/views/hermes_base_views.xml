@@ -1,0 +1,3 @@
+<odoo>
+    <menuitem name="Hermes Messages" id="menu_root" web_icon="hermes-message,static/description/icon.png"/>
+</odoo>
